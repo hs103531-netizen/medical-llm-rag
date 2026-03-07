@@ -1,0 +1,36 @@
+# 가상환경
+medical_env/
+venv/
+env/
+.env
+
+# 데이터 폴더
+data/
+
+# Python 캐시
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter 체크포인트
+.ipynb_checkpoints/
+
+# HuggingFace 캐시
+*.cache
+
+# 모델 파일 (용량 큰 것들)
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# 환경변수
+.env
+*.env
+
+# OS 파일
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
