@@ -16,6 +16,14 @@ pinned: false
 
 ---
 
+## 🚀 라이브 데모
+
+[![Hugging Face Spaces](https://img.shields.io/badge/🤗%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/jdi1009/medical-rag)
+
+👉 **[데모 바로가기](https://huggingface.co/spaces/jdi1009/medical-rag)**
+
+---
+
 ## 📌 프로젝트 개요
 
 | 항목 | 내용 |
