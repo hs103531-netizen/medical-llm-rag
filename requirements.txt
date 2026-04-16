@@ -4,3 +4,4 @@ peft==0.14.0
 chromadb==0.5.3
 sentence-transformers==3.0.0
 accelerate==0.34.0
+pyaudioop
