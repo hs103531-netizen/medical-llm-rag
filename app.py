@@ -458,93 +458,31 @@ def status_check():
     return f"시스템 상태: {rag._status}"
 
 
-# ── Gradio UI ─────────────────────────────────────────────────────────────────
+# ── Gradio UI (gr.Interface) ──────────────────────────────────────────────────
 
-DISCLAIMER = (
-    "**[주의사항]** 이 서비스는 일반적인 의료 정보를 제공하기 위한 AI 상담 서비스입니다. "
-    "실제 진단·처방을 대체할 수 없으며, 증상이 심각하거나 응급 상황이라면 "
-    "즉시 병원을 방문하거나 응급 전화(119)에 연락하세요."
+DESCRIPTION = (
+    "파인튜닝된 LLM + RAG(벡터DB 검색) 기반 의료 상담 시스템입니다.\n"
+    "증상을 입력하면 관련 의료 정보를 검색하여 답변을 생성합니다.\n\n"
+    "⚠️ **주의**: 실제 진단·처방을 대체할 수 없습니다. "
+    "응급 상황이라면 즉시 병원을 방문하거나 119에 연락하세요."
 )
 
-with gr.Blocks(
+demo = gr.Interface(
+    fn=answer,
+    inputs=gr.Textbox(
+        label="증상 또는 질문을 입력하세요",
+        placeholder="예: 두통이 3일째 계속되고 구역질도 납니다...",
+        lines=3,
+    ),
+    outputs=[
+        gr.Textbox(label="AI 답변", lines=10),
+        gr.Textbox(label="참고한 의료 정보 (RAG 검색 결과)", lines=10),
+    ],
     title="한국어 의료 상담 AI",
-    theme=gr.themes.Soft(),
-    css=".context-box textarea { font-size: 0.85em !important; color: #555 !important; }",
-) as demo:
-
-    gr.Markdown("# 한국어 의료 상담 AI")
-    gr.Markdown(
-        "파인튜닝된 LLM + RAG(벡터DB 검색) 기반 의료 상담 시스템입니다.  \n"
-        "증상을 입력하면 관련 의료 정보를 검색하여 답변을 생성합니다."
-    )
-    gr.Markdown(DISCLAIMER)
-
-    with gr.Row():
-        with gr.Column(scale=3):
-            question_box = gr.Textbox(
-                label="증상 또는 질문을 입력하세요",
-                placeholder="예: 두통이 3일째 계속되고 구역질도 납니다...",
-                lines=3,
-            )
-            with gr.Row():
-                submit_btn = gr.Button("질문하기", variant="primary")
-                clear_btn  = gr.Button("초기화")
-
-            answer_box = gr.Textbox(
-                label="AI 답변",
-                lines=10,
-                interactive=False,
-            )
-
-        with gr.Column(scale=2):
-            context_box = gr.Textbox(
-                label="참고한 의료 정보 (RAG 검색 결과)",
-                lines=15,
-                interactive=False,
-                elem_classes=["context-box"],
-            )
-
-    gr.Examples(
-        examples=EXAMPLES,
-        inputs=question_box,
-        label="예시 질문",
-    )
-
-    status_box = gr.Textbox(
-        label="시스템 상태",
-        value=f"시스템 상태: {rag._status}",
-        interactive=False,
-        lines=1,
-    )
-    refresh_btn = gr.Button("상태 새로고침", size="sm")
-
-    # ── 이벤트 연결 ────────────────────────────────────────────────────────────
-
-    submit_btn.click(
-        fn=answer,
-        inputs=question_box,
-        outputs=[answer_box, context_box],
-    )
-    question_box.submit(
-        fn=answer,
-        inputs=question_box,
-        outputs=[answer_box, context_box],
-    )
-    clear_btn.click(
-        fn=lambda: ("", "", ""),
-        outputs=[question_box, answer_box, context_box],
-    )
-    refresh_btn.click(
-        fn=status_check,
-        outputs=status_box,
-    )
-
-    gr.Markdown(
-        "---\n"
-        "**모델**: [jdi1009/checkpoints](https://huggingface.co/jdi1009/checkpoints) (파인튜닝)  \n"
-        "**임베딩**: snunlp/KR-SBERT-V40K-klueNLI-augSTS  \n"
-        "**벡터DB**: ChromaDB"
-    )
+    description=DESCRIPTION,
+    examples=[[q] for q in EXAMPLES],
+    cache_examples=False,
+)
 
 
 # ── 진입점 ────────────────────────────────────────────────────────────────────
