@@ -1,3 +1,14 @@
+---
+title: 한국어 의료 상담 AI
+emoji: 🏥
+colorFrom: blue
+colorTo: green
+sdk: gradio
+sdk_version: "4.44.0"
+app_file: app.py
+pinned: false
+---
+
 # 🏥 한국어 의료 도메인 LLM 파인튜닝 + RAG 시스템
 
 > 한국어 의료 국가고시 데이터로 LLM을 파인튜닝하고,  
